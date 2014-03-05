@@ -134,11 +134,20 @@ class PostController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		if(Yii::app()->request->isPostRequest){
+			// we only allow deletion via POST request
+			$this->loadModel()->delete();
+
+			if(!isset($_POST['ajax'])){
+				$this->redirect(array('index'));
+			}
+		} else {
+			throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		//if(!isset($_GET['ajax']))
+			//$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
 	/**
@@ -209,5 +218,11 @@ class PostController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+
+	protected function afterDelete(){
+		parent::afterDelete();
+		Comment::model()->deleteAll('post_id='.$this->id);	
+		Tag::model()->updateFrequency($this->tags, '');
 	}
 }
