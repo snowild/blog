@@ -105,4 +105,26 @@ class Tag extends CActiveRecord
         {
                 return implode(', ',$tags);
         }
+
+	protected function afterSave()
+	{
+    		parent::afterSave();
+    		Tag::model()->updateFrequency($this->_oldTags, $this->tags);
+	}
+ 
+	private $_oldTags;
+ 
+	protected function afterFind()
+	{
+    		parent::afterFind();
+    		$this->_oldTags=$this->tags;
+	}
+
+	public function updateFrequency($oldTags, $newTags)
+        {
+                $oldTags=self::string2array($oldTags);
+                $newTags=self::string2array($newTags);
+                $this->addTags(array_values(array_diff($newTags,$oldTags)));
+                $this->removeTags(array_values(array_diff($oldTags,$newTags)));
+        }
 }
