@@ -27,21 +27,19 @@ class PostController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
+			return array(
+        			array('allow',  // allow all users to perform 'list' and 'show' actions
+            				'actions'=>array('index', 'view'),
+            				'users'=>array('*'),
+        			),
+        			array('allow', // allow authenticated users to perform any action
+            				'users'=>array('@'),
+        			),
+        			array('deny',  // deny all users
+            				'users'=>array('*'),
+        			),
+    			);
+
 		);
 	}
 
@@ -51,9 +49,35 @@ class PostController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$post = $this->loadModel();
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'model'=>$post,
 		));
+	}
+
+	private $_model;
+
+	public function loadModel()
+	{
+		if($_model === null)
+		{
+			if(isset($_GET['id']))
+			{
+				if(Yii::app()->user->isGuest)
+				{
+					$condition = 'status='.Post::STATUS_PUBLISHED.' or status='.Post::STATUS_ARCHIVED;
+				}
+				else 
+				{
+					$condition = '';
+				}
+				$this->_model = Post::model()->findByPk($_GET['id'], $condition);
+			}
+			if($this->_model === null){
+				throw new CHttpException(404,'The requested page does not exist.');
+			}
+		}	
+		return $this->_model;
 	}
 
 	/**
@@ -110,11 +134,20 @@ class PostController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		if(Yii::app()->request->isPostRequest){
+			// we only allow deletion via POST request
+			$this->loadModel()->delete();
+
+			if(!isset($_POST['ajax'])){
+				$this->redirect(array('index'));
+			}
+		} else {
+			throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		//if(!isset($_GET['ajax']))
+			//$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
 	/**
@@ -122,8 +155,24 @@ class PostController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Post');
-		$this->render('index',array(
+		$criteria = new CDbCriteria(array(
+			'condition'=>'status='.Post::STATUS_PUBLISHED,
+			'order'=>'update_time DESC',
+			'with'=>'commentCount',
+		));
+
+		if(isset($_GET['tag'])){
+			$criteria->addSearchCondition('tags', $_GET['tag']);
+		}
+
+		$dataProvider = new CActiveDataProvider('Post', array(
+			'pagination'=>array(
+				'pageSize'=>5,
+			),
+			'criteria'=>$criteria;
+		));
+		
+		$this->render('index', array(
 			'dataProvider'=>$dataProvider,
 		));
 	}
@@ -169,5 +218,11 @@ class PostController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+
+	protected function afterDelete(){
+		parent::afterDelete();
+		Comment::model()->deleteAll('post_id='.$this->id);	
+		Tag::model()->updateFrequency($this->tags, '');
 	}
 }
