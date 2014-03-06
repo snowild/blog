@@ -122,7 +122,13 @@ class CommentController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Comment');
+		$dataProvider=new CActiveDataProvider('Comment', array(
+			'criteria'=>array(
+				'with'=>'post',
+				'order'=>'t.status, t.create_time DESC',	
+			),	
+		));
+
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -169,5 +175,30 @@ class CommentController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+	
+	public function actionApp() {
+		if(Yii::app()->getRequest()->isPostRequest) {
+			$comment = $this->loadModel();
+			$comment->approve();
+			$this->redirect(array('index'));	
+		} else {
+			throw CHttpException(400, 'Invalid request...');
+		}
+	}
+	
+	protected $_model;
+	
+	public function loadModel() {
+		if($this->_model===null) {
+			if(isset($_GET['id'])) {
+				$this->_model=Comment::model()->findbyPk($_GET['id']);
+			}
+						
+			if($this->_model===null) {
+				throw new CHttpException(404,'The requested page does not exist.');
+			}
+		}
+		return $this->_model;
 	}
 }
