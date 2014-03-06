@@ -26,7 +26,6 @@ class PostController extends Controller
 	 */
 	public function accessRules()
 	{
-		return array(
 			return array(
         			array('allow',  // allow all users to perform 'list' and 'show' actions
             				'actions'=>array('index', 'view'),
@@ -38,9 +37,7 @@ class PostController extends Controller
         			array('deny',  // deny all users
             				'users'=>array('*'),
         			),
-    			);
-
-		);
+    		);
 	}
 
 	/**
@@ -169,7 +166,7 @@ class PostController extends Controller
 			'pagination'=>array(
 				'pageSize'=>5,
 			),
-			'criteria'=>$criteria;
+			'criteria'=>$criteria,
 		));
 		
 		$this->render('index', array(
