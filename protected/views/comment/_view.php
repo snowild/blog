@@ -33,6 +33,15 @@
 	<?php echo CHtml::encode($data->url); ?>
 	<br />
 
+	<?php if($data->status==Comment::STATUS_PENDING): ?>
+		<span class="pending">Pending approval</span>
+		<?php echo CHtml::linkButton('Approve', array(
+			'submit'=>array('comment/approve','id'=>$data->id),
+		)); ?> |
+	<?php endif; ?>
+	<?php echo CHtml::link('Update',array('comment/update','id'=>$data->id)); ?> |
+    <?php echo CHtml::link('Delete',array('comment/delete','id'=>$data->id),array('class'=>'delete')); ?> |
+	
 	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('post_id')); ?>:</b>
 	<?php echo CHtml::encode($data->post_id); ?>
