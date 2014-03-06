@@ -39,10 +39,6 @@ class PostController extends Controller
         			),
     		);
 	}
-
-	public function actionTest() {
-		$this->render('test', array());
-	}
 	
 	/**
 	 * Displays a particular model.
