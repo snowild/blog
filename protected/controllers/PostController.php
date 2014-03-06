@@ -40,6 +40,10 @@ class PostController extends Controller
     		);
 	}
 
+	public function actionTest() {
+		$this->render('test', array());
+	}
+	
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -128,7 +132,7 @@ class PostController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+		$model=$this->loadModel();
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -217,13 +221,13 @@ class PostController extends Controller
 	 * @return Post the loaded model
 	 * @throws CHttpException
 	 */
-	public function loadModel($id)
-	{
-		$model=Post::model()->findByPk($id);
-		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
-		return $model;
-	}
+// 	public function loadModel($id)
+// 	{
+// 		$model=Post::model()->findByPk($id);
+// 		if($model===null)
+// 			throw new CHttpException(404,'The requested page does not exist.');
+// 		return $model;
+// 	}
 
 	/**
 	 * Performs the AJAX validation.
