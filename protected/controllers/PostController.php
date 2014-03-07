@@ -183,6 +183,15 @@ class PostController extends Controller
 			$criteria->addSearchCondition('tags', $_GET['tag']);
 		}
 
+		// 測試logging功能
+		if(isset($_GET['tag'])){
+			// Level: trace, Category: application
+			Yii::trace('[trace]收到的tag值：'.$_GET['tag']);
+			
+			// Level指定error, Category: application
+			Yii::log('[log]收到的tag值：'.$_GET['tag'], 'error');
+		}
+		
 		$dataProvider = new CActiveDataProvider('Post', array(
 			'pagination'=>array(
 				'pageSize'=>5,
