@@ -55,10 +55,15 @@ return array(
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),
-		
+
+		'cache'=>array(
+				'class'=>'CDbCache',
+		),
 		'db'=>array(
+			'class'=>'system.db.CDbConnection',
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/blog.db',
 			'tablePrefix'=>'tbl_',
+			'schemaCachingDuration'=>3600,
 		),
 		// uncomment the following to use a MySQL database
 		/*
