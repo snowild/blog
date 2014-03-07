@@ -35,16 +35,26 @@ return array(
 			'allowAutoLogin'=>true,
 		),
 		// uncomment the following to enable URLs in path-format
-		/*
+		
 		'urlManager'=>array(
 			'urlFormat'=>'path',
+			'showScriptName'=>true,
+			'caseSensitive'=>false,
+// 			'rules'=>array(
+// 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
+// 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+// 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+			
 			'rules'=>array(
-				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+				'post/<id:\d+>/<title:.*?>'=>'post/view',
+				'posts/<tag:.*?>'=>array(
+						'post/index', 
+						'urlSuffix'=>'.html',
+				),
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),
-		*/
+		
 		'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/blog.db',
 			'tablePrefix'=>'tbl_',
