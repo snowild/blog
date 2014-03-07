@@ -50,6 +50,7 @@ class PostController extends Controller
 		$comment = $this->newComment($post);
 		$this->render('view',array(
 			'model'=>$post,
+			'comment'=>$comment,
 		));
 	}
 	
@@ -77,7 +78,7 @@ class PostController extends Controller
 
 	public function loadModel()
 	{
-		if($_model === null)
+		if($this->_model === null)
 		{
 			if(isset($_GET['id']))
 			{

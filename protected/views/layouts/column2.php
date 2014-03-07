@@ -20,10 +20,14 @@
 			$this->widget('UserMenu');
 		}
 		
-		$this->widget('TagCloud', array(
-// 			'maxTags'=>Yii::app()->params['tagCloudCount'],
-			'maxTags'=>20,
-		));
+		if($this->beginCache('tagCloud', array('duration'=>3600))) {// COutputCache
+			$this->widget('TagCloud', array(
+// 				'maxTags'=>Yii::app()->params['tagCloudCount'],
+				'maxTags'=>20,
+			));
+			
+			$this->endCache();
+		}	
 		
 		$this->widget('RecentComments', array(
 // 			'maxComments'=>Yii::app()->params['recentCommentCount'],

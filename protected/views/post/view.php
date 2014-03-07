@@ -4,7 +4,8 @@
 
 $this->breadcrumbs=array(
 	'Posts'=>array('index'),
-	$model->title,
+	$model->title=>array('view','id'=>$model->id),
+	'View',
 );
 
 $this->menu=array(
@@ -41,7 +42,7 @@ $this->menu=array(
 		<?php $this->renderPartial('_comments', array(
 				'post'=>$model,
 				'comments'=>$model->comments,
-		))?>
+		)); ?>
 	<?php endif; ?>
 
 	<h3>Leave a Comment</h3>
