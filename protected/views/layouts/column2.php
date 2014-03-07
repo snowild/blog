@@ -25,6 +25,11 @@
 			'maxTags'=>20,
 		));
 		
+		$this->widget('RecentComments', array(
+// 			'maxComments'=>Yii::app()->params['recentCommentCount'],
+			'maxComments'=>10,
+		));
+		
 		$this->endWidget();
 		
 	?>

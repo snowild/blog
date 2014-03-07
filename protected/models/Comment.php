@@ -138,4 +138,12 @@ class Comment extends CActiveRecord
 	public function getPendingCommentCount() {
 		return $this->count('status='.self::STATUS_PENDING);
 	}
+	
+	public function findRecentComments($limit=10){
+		return $this->with('post')->findAll(array(
+			'condition'=>'t.status='.Comment::STATUS_APPROVED,
+			'order'=>'t.create_time Desc',
+			'limit'=>$limit,		
+		));
+	}
 }
