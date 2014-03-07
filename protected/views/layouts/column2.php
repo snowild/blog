@@ -25,7 +25,9 @@
 // 				'maxTags'=>Yii::app()->params['tagCloudCount'],
 				'maxTags'=>20,
 			));
-		}
+			
+			$this->endCache();
+		}	
 		
 		$this->widget('RecentComments', array(
 // 			'maxComments'=>Yii::app()->params['recentCommentCount'],
