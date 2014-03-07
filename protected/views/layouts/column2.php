@@ -20,6 +20,11 @@
 			$this->widget('UserMenu');
 		}
 		
+		$this->widget('TagCloud', array(
+// 			'maxTags'=>Yii::app()->params['tagCloudCount'],
+			'maxTags'=>20,
+		));
+		
 		$this->endWidget();
 		
 	?>
