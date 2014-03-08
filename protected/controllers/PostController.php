@@ -64,6 +64,7 @@ class PostController extends Controller
 		
 		if (isset($_POST['Comment'])) {
 			$comment->attributes = $_POST['Comment'];
+			$comment->setAttribute('post_id', $post->id);
 			if ($post->addComment($comment)) {
 				if ($comment->status==Comment::STATUS_PENDING) {
 					Yii::app()->user->setFlash('commentSubmitted', 'Thank you...');
@@ -72,6 +73,8 @@ class PostController extends Controller
 				$this->refresh();
 			}	
 		}	
+		
+		return $comment;
 	}
 
 	private $_model;

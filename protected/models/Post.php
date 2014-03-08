@@ -163,13 +163,20 @@ class Post extends CActiveRecord
 		parent::afterSave();
 		Tag::model()->updateFrequency($this->_oldTags, $this->tags);
 	}
-	
-	
-	
+		
 	protected function afterFind()
 	{
 		parent::afterFind();
 		$this->_oldTags=$this->tags;
 	}
 
+	public function addComment($comment)
+    {
+    	if(Yii::app()->params['commentNeedApproval'])
+    		$comment->status=Comment::STATUS_PENDING;
+    	else
+    		$comment->status=Comment::STATUS_APPROVED;
+    	$comment->post_id=$this->id;
+    	return $comment->save();
+    }
 }

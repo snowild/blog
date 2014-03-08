@@ -22,16 +22,14 @@
 		
 		if($this->beginCache('tagCloud', array('duration'=>3600))) {// COutputCache
 			$this->widget('TagCloud', array(
-// 				'maxTags'=>Yii::app()->params['tagCloudCount'],
-				'maxTags'=>20,
+				'maxTags'=>Yii::app()->params['tagCloudCount'],
 			));
 			
 			$this->endCache();
 		}	
 		
 		$this->widget('RecentComments', array(
-// 			'maxComments'=>Yii::app()->params['recentCommentCount'],
-			'maxComments'=>10,
+			'maxComments'=>Yii::app()->params['recentCommentCount'],
 		));
 		
 		$this->endWidget();
