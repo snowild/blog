@@ -72,6 +72,8 @@ class PostController extends Controller
 				$this->refresh();
 			}	
 		}	
+		
+		return $comment;
 	}
 
 	private $_model;
